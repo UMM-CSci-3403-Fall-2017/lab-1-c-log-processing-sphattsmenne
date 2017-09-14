@@ -11,8 +11,11 @@ done
 
 
 
-# Used sort to sort holder.txt so uniq can get the number of occurences of each name. Then we used awk to format the data into html. Finally we use cat to place that in a new txt file called holder2.txt
-sort holder.txt  | join -1 1 -2 2 ./etc/country_IP_map.txt  holder.txt | awk '{print $2;}' | sort | uniq -c | awk '{print "data.addRow([\x27"$2"\x27, "$1"]);"}' | cat > holder2.txt
+# Used  sort holder.txt and made a new file called this.txt which has holder.txt. The uniq command can get the number of occurences of each name. Then we used awk to format the data into html. Finally we use cat to place that in a new txt file called holder2.txt
+
+sort holder.txt > this.txt
+
+join -1 1 -2 1 this.txt ./etc/country_IP_map.txt | awk '{print $2;}' | sort | uniq -c | awk '{print "data.addRow([\x27"$2"\x27, "$1"]);"}' | cat > holder2.txt
 
 
 
@@ -20,6 +23,7 @@ sort holder.txt  | join -1 1 -2 2 ./etc/country_IP_map.txt  holder.txt | awk '{p
 # Used our wrap_contents script in bin to wrap our holder2.txt with the html header and footer needed
 ./bin/wrap_contents.sh holder2.txt ./html_components/country_dist $Dir/country_dist.html
 
-# Removes the two temporary holder files we used
+# Removes the three temporary files we used
 rm holder.txt
 rm holder2.txt
+rm this.txt
